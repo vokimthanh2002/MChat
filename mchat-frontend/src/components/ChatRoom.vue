@@ -97,6 +97,9 @@ export default {
 h1{
   text-align: center;
 }
+.content{
+  color: #181818;
+}
 
 .message {
   margin-bottom: 10px;
@@ -107,6 +110,7 @@ h1{
 
 .sender {
   font-weight: bold;
+  color: #181818;
 }
 
 .input-container {
