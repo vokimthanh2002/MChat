@@ -4,7 +4,7 @@ import ChatRoom from '../components/ChatRoom.vue';
 
 const routes = [
     {
-        path: '/login',
+        path: '',
         name: 'Login',
         component: Login
     },

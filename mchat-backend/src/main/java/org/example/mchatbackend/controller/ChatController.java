@@ -1,45 +1,30 @@
-package org.example.mchatbackend.controller;
+package com.example.chat.chat;
 
-import org.example.mchatbackend.entity.Message;
-import org.example.mchatbackend.entity.User;
-import org.example.mchatbackend.service.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.example.mchatbackend.controller.ChatMessage;
+import org.springframework.boot.autoconfigure.task.TaskSchedulingProperties;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.stereotype.Controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-@RestController
+@Controller
 public class ChatController {
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
-    private MessageService messageService;
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        // Giả định đăng nhập thành công, không dùng Spring Security
-        return ResponseEntity.ok(user);
-    }
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public Message sendMessage(@Payload Message message) {
-        message.setTimestamp(LocalDateTime.now());
-        return messageService.save(message);
+    public ChatMessage sendMessage (
+            @Payload ChatMessage chatMessage
+    ) {
+        return chatMessage;
     }
 
-    @GetMapping("/messages")
-    public List<Message> getMessages() {
-        return messageService.findAllMessages();
+    public ChatMessage addUser(
+            @Payload ChatMessage chatMessage,
+            SimpMessageHeaderAccessor headerAccessor
+    ) {
+        // Add username in web socket sesseion
+        headerAccessor.getSessionAttributes().put("user", chatMessage);
+        return chatMessage;
     }
 }
