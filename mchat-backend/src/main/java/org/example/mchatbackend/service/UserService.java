@@ -38,7 +38,7 @@ public class UserService {
         user.setRoles(Collections.singletonList(role));
         userRepository.save(user);
     }
-    Optional<UserEntity> findUserByUsername(String username) {
+    public UserEntity findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 }

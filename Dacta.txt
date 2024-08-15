@@ -1,0 +1,55 @@
+1. Mô tả tổng quan
+Chức năng quản lý user cho phép admin thực hiện các thao tác liên quan đến người dùng trên hệ thống, bao gồm tạo mới, chỉnh sửa, block và xem thông tin người dùng.
+
+2. Yêu cầu chức năng
+2.1. Tạo mới user
+Mô tả: Admin có thể tạo mới một user trên hệ thống.
+Đầu vào:
+Họ và tên
+Email
+Tên đăng nhập
+Mật khẩu
+Vai trò (User,amdin)
+Xử lý:
+Hệ thống kiểm tra tính duy nhất của email và tên đăng nhập.
+Nếu thông tin hợp lệ, hệ thống sẽ lưu user mới vào cơ sở dữ liệu.
+Đầu ra:
+Thông báo thành công khi tạo user mới.
+Thông báo lỗi nếu có vấn đề trong quá trình tạo (ví dụ: email đã tồn tại).
+2.2. Chỉnh sửa thông tin user
+Mô tả: Admin có thể chỉnh sửa thông tin của một user hiện có.
+Đầu vào:
+User ID (để xác định user cần chỉnh sửa)
+Các thông tin cần chỉnh sửa (họ tên, email, tên đăng nhập, vai trò)
+Xử lý:
+Hệ thống kiểm tra tính hợp lệ của các thông tin mới.
+Cập nhật thông tin user trong cơ sở dữ liệu nếu hợp lệ.
+Đầu ra:
+Thông báo thành công khi cập nhật.
+Thông báo lỗi nếu có vấn đề trong quá trình chỉnh sửa (ví dụ: email đã được sử dụng bởi user khác).
+2.3. Block user
+Mô tả: Admin có thể block một user khỏi hệ thống.
+Đầu vào:
+User ID (để xác định user cần xóa)
+Xử lý:
+Hệ thống xác nhận hành động block từ admin.
+Block thông tin user khỏi cơ sở dữ liệu.
+Đầu ra:
+Thông báo thành công khi block user.
+Thông báo lỗi nếu có vấn đề trong quá trình block.
+2.4. Xem danh sách user
+Mô tả: Admin có thể xem danh sách tất cả user trên hệ thống.
+Đầu vào:
+Không cần đầu vào cụ thể (có thể có tùy chọn lọc theo vai trò, trạng thái hoạt động).
+Xử lý:
+Hệ thống truy vấn cơ sở dữ liệu để lấy danh sách user.
+Đầu ra:
+Hiển thị danh sách user bao gồm các thông tin như họ tên, email, tên đăng nhập, vai trò.
+3. Yêu cầu phi chức năng
+Bảo mật: Chỉ admin mới có quyền truy cập vào chức năng quản lý user.
+Hiệu năng: Hệ thống cần xử lý nhanh chóng các yêu cầu liên quan đến quản lý user, ngay cả khi số lượng user lớn.
+Giao diện người dùng: Giao diện quản lý user cần trực quan, dễ sử dụng và đảm bảo admin có thể thực hiện các thao tác một cách dễ dàng.
+Logs và ghi chép: Tất cả các thao tác liên quan đến quản lý user cần được ghi lại trong hệ thống logs để phục vụ mục đích kiểm tra và bảo mật.
+4. Kết nối và tích hợp
+Chức năng quản lý user cần được tích hợp với hệ thống xác thực và phân quyền của toàn hệ thống.
+Tất cả các thay đổi về user cần được cập nhật ngay lập tức và phản ánh trên các phần khác của hệ thống liên quan đến người dùng.

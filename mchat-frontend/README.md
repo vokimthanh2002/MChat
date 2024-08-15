@@ -27,6 +27,7 @@ npm install global
 npm install socket.io-client
 npm install vuex
 npm install bootstrap@4
+npm install sweetalert2
 
 
 

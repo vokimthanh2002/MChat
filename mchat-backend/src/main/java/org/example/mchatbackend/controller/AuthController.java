@@ -1,4 +1,5 @@
 package org.example.mchatbackend.controller;
+import jakarta.validation.Valid;
 import org.example.mchatbackend.dto.AuthReposeDTO;
 import org.example.mchatbackend.dto.LoginRequest;
 import org.example.mchatbackend.dto.RegisterRequest;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,10 @@ public class AuthController {
 
 
     @PostMapping(value = "/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.OK);
+        }
         if(userRepository.existsByUsername(registerRequest.getUsername())){
             return new ResponseEntity<>("User name is takes", HttpStatus.BAD_REQUEST);
         }
@@ -56,7 +61,7 @@ public class AuthController {
         return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
     @PostMapping(value = "/login")
-    public ResponseEntity<AuthReposeDTO> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
