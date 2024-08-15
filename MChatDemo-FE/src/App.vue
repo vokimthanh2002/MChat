@@ -36,6 +36,18 @@ export default {
     const message = ref('');
     const stompClient = ref(null);
 
+    const sendMessage = () => {
+      if (message.value.trim() && stompClient.value && stompClient.value.connected) {
+        const mChat = {
+          nickname: nickname.value,
+          content: message.value
+        };
+        stompClient.value.send('/app/chat', {}, JSON.stringify(mChat));
+        // Gửi message xuống server theo đường dẫn này
+        message.value = '';
+      }
+    };
+
     const onMessageReceived = (message) => {
       const receivedMessage = JSON.parse(message.body);
       messages.value.push(receivedMessage);
@@ -63,17 +75,7 @@ export default {
       }
     });
 
-    const sendMessage = () => {
-      if (message.value.trim() && stompClient.value && stompClient.value.connected) {
-        const mChat = {
-          nickname: nickname.value,
-          content: message.value
-        };
-        stompClient.value.send('/app/chat', {}, JSON.stringify(mChat));
-        // Gửi message xuống server theo đường dẫn này
-        message.value = '';
-      }
-    };
+    
 
     return {
       messages,

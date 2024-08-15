@@ -12,6 +12,7 @@ public class MChatController {
 	@MessageMapping("/chat")
 	@SendTo("/mchat/messages")
 	public MChat sendMessage (@Payload MChat mchat) {
+		System.out.println("Content message: "+mchat);
 		return mchat;
 	}
 }
