@@ -1,5 +1,5 @@
 <template>
-  <h1>CHAT ROOM</h1>
+  <h1>Xin chào {{username}}</h1>
   <div class="chat-container">
     <div class="chat-box">
       <div class="messages">
@@ -29,9 +29,10 @@ export default {
   data() {
     return {
       stompClient: null,
-      socketUrl: 'http://localhost:8080/chat', // Địa chỉ WebSocket của bạn
+      socketUrl: `http://localhost:8080/chat?token=${localStorage.getItem('token')}`, // Địa chỉ WebSocket của bạn
       message: '',
-      messages: []
+      messages: [],
+      username: localStorage.getItem('username')
     };
   },
   methods: {
@@ -39,8 +40,13 @@ export default {
       const socket = new SockJS(this.socketUrl);
       this.stompClient = Stomp.over(socket);
 
-      this.stompClient.connect({}, frame => {
-        console.log('Connected: ' + frame);
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        ContentType: 'application/json; charset=UTF-8'
+      };
+
+      this.stompClient.connect(headers, frame => {
+        console.log('Connected: ' + frame );
         this.stompClient.subscribe('/topic/public', messageOutput => {
           this.onMessageReceived(JSON.parse(messageOutput.body));
         });
@@ -51,7 +57,7 @@ export default {
     sendMessage() {
       if (this.message.trim() !== '') {
         this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify({
-          sender: 'anonymous',
+          sender: localStorage.getItem('username'),
           content: this.message,
           type: 'CHAT'
         }));

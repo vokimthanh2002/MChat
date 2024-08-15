@@ -25,6 +25,9 @@ npm install vue-router
 npm update sockjs-client stompjs
 npm install global
 npm install socket.io-client
+npm install vuex
+npm install bootstrap@4
+
 
 
 
