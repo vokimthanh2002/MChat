@@ -1,5 +1,10 @@
 <template>
   <h1>Xin chào {{username}}</h1>
+<div class="header">
+    <button class="logout" @click="logout">Logout</button>
+</div>
+
+
   <div class="chat-container">
     <div class="chat-box">
       <div class="messages">
@@ -54,6 +59,10 @@ export default {
         console.log('STOMP error: ' + error);
       });
     },
+    logout() {
+      this.$router.push("/");
+      localStorage.removeItem('token');
+    },
     sendMessage() {
       if (this.message.trim() !== '') {
         this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify({
@@ -70,7 +79,8 @@ export default {
   },
   mounted() {
     this.connect();
-  }
+  },
+
 };
 </script>
 
@@ -146,4 +156,18 @@ h1{
 .send-button:hover {
   background-color: #0056b3;
 }
+
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.logout {
+  background-color: #2980b9;
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+  flex-wrap: nowrap;
+}
+
 </style>
