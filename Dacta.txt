@@ -27,17 +27,27 @@ Cập nhật thông tin user trong cơ sở dữ liệu nếu hợp lệ.
 Đầu ra:
 Thông báo thành công khi cập nhật.
 Thông báo lỗi nếu có vấn đề trong quá trình chỉnh sửa (ví dụ: email đã được sử dụng bởi user khác).
-2.3. Block user
+2.3. Khoá user
 Mô tả: Admin có thể block một user khỏi hệ thống.
 Đầu vào:
 User ID (để xác định user cần xóa)
 Xử lý:
 Hệ thống xác nhận hành động block từ admin.
-Block thông tin user khỏi cơ sở dữ liệu.
+Chuyển đổi trạng thái của user đã bị khoá.
 Đầu ra:
 Thông báo thành công khi block user.
 Thông báo lỗi nếu có vấn đề trong quá trình block.
-2.4. Xem danh sách user
+2.4. Mở khoá user
+Mô tả: Admin có thể mở khoá một user khi bị khoá.
+Đầu vào:
+User ID (để xác định user cần xóa)
+Xử lý:
+Hệ thống xác nhận hành động mở khoá từ admin.
+Chuyển đổi trạng thái của user mở khoá.
+Đầu ra:
+Thông báo thành công khi mở khoá user.
+Thông báo lỗi nếu có vấn đề trong quá trình mở khoá.
+2.5. Xem danh sách user
 Mô tả: Admin có thể xem danh sách tất cả user trên hệ thống.
 Đầu vào:
 Không cần đầu vào cụ thể (có thể có tùy chọn lọc theo vai trò, trạng thái hoạt động).
