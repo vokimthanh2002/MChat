@@ -1,0 +1,15 @@
+Chức năng Lựa chọn tài khoản trong danh sách để chat
+- Mô tả tổng quan:
+Người dùng có thể click chọn tài khoản để chat hoặc tìm tên tài khoản để chat
+- Yêu cầu chi tiết:
+  + Click chọn tài khoản để chat:
+	* Người dùng click chọn 1 tài khoản bên danh sách tài khoản (bên trái màn hình) để thực hiện chat
+	* Hệ thống sẽ gửi truy vấn đến database để hiển thị thông tin của tài khoản được chọn và đoạn tin nhắn giữa tài khoản được chọn với người chọn.
+  + Tìm kiếm tài khoản để chat: 
+	* Người dùng click vào button (bút chì) để mở thanh tìm kiếm
+	* Nhập tên tài khoản cần chat
+	* Khi gõ xong mỗi kí tự thì hệ thống sẽ gửi truy vấn để tìm các tên tài khoản phù hợp
+	* Nếu không tìm được tài khoản nào phù hợp thì không hiển thị gì bên dưới thanh tìm kiếm
+	* Nếu tìm được bất kỳ tài khoản nào phù hợp thì hiển thị bên dưới thanh tìm kiếm
+	* Người dùng chọn 1 tài khoản trong danh sách tìm kiếm được để thực hiện chat
+	* Hệ thống sẽ gửi truy vấn đến database để hiển thị thông tin của tài khoản được chọn và đoạn tin nhắn giữa tài khoản được chọn với người chọn.
