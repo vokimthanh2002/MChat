@@ -14,6 +14,10 @@
         <button type="submit" class="btn btn-primary btn-block">Login</button>
       </form>
       <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+      <p>
+        Don't have an account?
+        <router-link to="/register">Register here</router-link>
+      </p>
     </div>
   </div>
 </template>

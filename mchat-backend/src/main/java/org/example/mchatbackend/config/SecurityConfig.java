@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/chat/**").permitAll()
+                .requestMatchers("/api/register/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

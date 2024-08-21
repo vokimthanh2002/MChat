@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import ChatRoom from '../components/ChatRoom.vue';
+import app from "@/App.vue";
 
 const routes = [
     {
@@ -32,3 +33,9 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
+
+app.post('/api/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    // Xử lý logic đăng ký (lưu vào cơ sở dữ liệu, mã hóa mật khẩu, v.v.)
+    res.status(201).send({ message: 'User registered successfully' });
+});
