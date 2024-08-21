@@ -19,4 +19,7 @@ public class MessageService {
     public List<Message> findAllMessages() {
         return messageRepository.findAllByOrderByTimestampAsc();
     }
+    public void deleteMessage(Message message) {
+        messageRepository.delete(message);
+    }
 }

@@ -11,6 +11,7 @@ public class Message {
     private Long id;
 
     private String sender;
+    @Column(columnDefinition = "text")
     private String content;
     private LocalDateTime timestamp;
 

@@ -1,5 +1,5 @@
 1. Mô tả tổng quan
-Chức năng quản lý user cho phép admin thực hiện các thao tác liên quan đến người dùng trên hệ thống, bao gồm tạo mới, chỉnh sửa, block và xem thông tin người dùng.
+Chức năng quản lý user cho phép admin thực hiện các thao tác liên quan đến người dùng trên hệ thống, bao gồm tạo mới, chỉnh sửa, khoá, mở khoá và xem thông tin người dùng.
 
 2. Yêu cầu chức năng
 2.1. Tạo mới user
@@ -8,10 +8,10 @@ Mô tả: Admin có thể tạo mới một user trên hệ thống.
 Họ và tên
 Email
 Tên đăng nhập
-Mật khẩu
+Mật khẩu 
 Vai trò (User,amdin)
 Xử lý:
-Hệ thống kiểm tra tính duy nhất của email và tên đăng nhập.
+Hệ thống kiểm tra tính duy nhất của email và tên đăng nhập. Thực hiện mã hoá mật khẩu.
 Nếu thông tin hợp lệ, hệ thống sẽ lưu user mới vào cơ sở dữ liệu.
 Đầu ra:
 Thông báo thành công khi tạo user mới.
@@ -28,19 +28,19 @@ Cập nhật thông tin user trong cơ sở dữ liệu nếu hợp lệ.
 Thông báo thành công khi cập nhật.
 Thông báo lỗi nếu có vấn đề trong quá trình chỉnh sửa (ví dụ: email đã được sử dụng bởi user khác).
 2.3. Khoá user
-Mô tả: Admin có thể block một user khỏi hệ thống.
+Mô tả: Admin có thể khoá một user khỏi hệ thống.
 Đầu vào:
-User ID (để xác định user cần xóa)
+User ID (để xác định user cần khoá)
 Xử lý:
-Hệ thống xác nhận hành động block từ admin.
+Hệ thống xác nhận hành động khoá từ admin.
 Chuyển đổi trạng thái của user đã bị khoá.
 Đầu ra:
-Thông báo thành công khi block user.
-Thông báo lỗi nếu có vấn đề trong quá trình block.
+Thông báo thành công khi khoá user.
+Thông báo lỗi nếu có vấn đề trong quá trình khoá.
 2.4. Mở khoá user
-Mô tả: Admin có thể mở khoá một user khi bị khoá.
+Mô tả: Admin có thể mở khoá một user khi user đã bị khoá.
 Đầu vào:
-User ID (để xác định user cần xóa)
+User ID (để xác định user cần mở khoá)
 Xử lý:
 Hệ thống xác nhận hành động mở khoá từ admin.
 Chuyển đổi trạng thái của user mở khoá.
@@ -50,7 +50,7 @@ Thông báo lỗi nếu có vấn đề trong quá trình mở khoá.
 2.5. Xem danh sách user
 Mô tả: Admin có thể xem danh sách tất cả user trên hệ thống.
 Đầu vào:
-Không cần đầu vào cụ thể (có thể có tùy chọn lọc theo vai trò, trạng thái hoạt động).
+Không cần đầu vào cụ thể (có thể có tùy chọn lọc theo vai trò, trạng thái hoạt động,danh sách tài khoản bị khoá, ...).
 Xử lý:
 Hệ thống truy vấn cơ sở dữ liệu để lấy danh sách user.
 Đầu ra:
@@ -60,6 +60,3 @@ Bảo mật: Chỉ admin mới có quyền truy cập vào chức năng quản l
 Hiệu năng: Hệ thống cần xử lý nhanh chóng các yêu cầu liên quan đến quản lý user, ngay cả khi số lượng user lớn.
 Giao diện người dùng: Giao diện quản lý user cần trực quan, dễ sử dụng và đảm bảo admin có thể thực hiện các thao tác một cách dễ dàng.
 Logs và ghi chép: Tất cả các thao tác liên quan đến quản lý user cần được ghi lại trong hệ thống logs để phục vụ mục đích kiểm tra và bảo mật.
-4. Kết nối và tích hợp
-Chức năng quản lý user cần được tích hợp với hệ thống xác thực và phân quyền của toàn hệ thống.
-Tất cả các thay đổi về user cần được cập nhật ngay lập tức và phản ánh trên các phần khác của hệ thống liên quan đến người dùng.

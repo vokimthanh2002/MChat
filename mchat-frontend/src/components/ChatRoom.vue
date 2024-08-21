@@ -12,13 +12,23 @@
               :key="msg.timestamp"
               :class="['message', { 'sent': msg.sender === username, 'received': msg.sender !== username }]"
           >
-            <img src="https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/455260886_1943578062751604_7333532100857127975_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeFu6jAodcMmaNzFDFzbI6V0qCDvpiMJvj6oIO-mIwm-Psi-3VMvi32BKwIb85ieGtrg3qSjSn1l-ui7DSk6amCj&_nc_ohc=E4Rfx1p_qToQ7kNvgGFITy0&_nc_ht=scontent.fdad1-4.fna&oh=00_AYDi9H4nfGJ-SAaLF244nT7C-FhoZgjrcI5sqmhSSxy9Bg&oe=66C25B9A" alt="avatar" class="avatar" v-if="msg.sender !== username" />
+            <img
+                v-if="msg.sender !== username"
+                src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+                alt="avatar"
+                class="avatar"
+            />
             <div class="message-content">
               <strong class="sender">{{ msg.sender }}</strong>
               <span class="content">{{ msg.content }}</span>
               <div class="timestamp">{{ formatTimestamp(msg.timestamp) }}</div>
             </div>
-            <img src="https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/455260886_1943578062751604_7333532100857127975_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeFu6jAodcMmaNzFDFzbI6V0qCDvpiMJvj6oIO-mIwm-Psi-3VMvi32BKwIb85ieGtrg3qSjSn1l-ui7DSk6amCj&_nc_ohc=E4Rfx1p_qToQ7kNvgGFITy0&_nc_ht=scontent.fdad1-4.fna&oh=00_AYDi9H4nfGJ-SAaLF244nT7C-FhoZgjrcI5sqmhSSxy9Bg&oe=66C25B9A" alt="avatar" class="avatar" v-if="msg.sender === username" />
+            <img
+                v-if="msg.sender === username"
+                src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+                alt="avatar"
+                class="avatar"
+            />
           </div>
         </div>
         <div class="input-container">
@@ -48,7 +58,6 @@ export default {
       message: '',
       messages: [],
       username: localStorage.getItem('username'),
-      messagesOld:[]
     };
   },
   methods: {
@@ -72,24 +81,13 @@ export default {
           }
         });
         this.messages = response.data;
-        console.log(response.data);
+        this.$nextTick(() => {
+          const messagesContainer = this.$refs.messagesContainer;
+          messagesContainer.scrollTop = messagesContainer.scrollHeight; // Cuộn thanh cuộn đến cuối cùng
+        });
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
-    },
-    getInfoToken() {
-      axios.get('https://565c-203-210-240-109.ngrok-free.app/messages', {
-        withCredentials: true,
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error('Có lỗi xảy ra:', error);
-          });
     },
     logout() {
       this.$router.push('/');
@@ -122,13 +120,15 @@ export default {
   mounted() {
     this.fetchMessages();
     this.connect();
-    // this.getInfoToken();
+    this.$nextTick(() => {
+      const messagesContainer = this.$refs.messagesContainer;
+      messagesContainer.scrollTop = messagesContainer.scrollHeight; // Cuộn thanh cuộn đến cuối cùng khi trang tải
+    });
   },
 };
 </script>
 
 <style scoped>
-/* CSS sẽ được đặt ở đây */
 .chat-wrapper {
   height: 100vh;
   background-color: #f0f2f5;
@@ -188,7 +188,7 @@ export default {
 .messages {
   flex: 1;
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: auto; /* Đảm bảo thanh cuộn tự động hiển thị khi cần */
   background-image: url("https://gcs.tripi.vn/public-tripi/tripi-feed/img/474064zjH/background-2d-dep-cho-photoshop_023229230.jpg");
   display: flex;
   flex-direction: column;
@@ -199,7 +199,6 @@ export default {
   margin-bottom: 10px;
   align-items: flex-end;
 }
-
 .sent {
   align-self: flex-end;
   flex-direction: row-reverse;
@@ -212,11 +211,12 @@ export default {
 .message-content {
   padding: 10px;
   border-radius: 20px;
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #00ccf1;
+  color: #ffffff;
   max-width: 70%;
   display: flex;
   flex-direction: column;
+  word-wrap: break-word;
 }
 
 .received .message-content {
@@ -268,5 +268,4 @@ export default {
 .send-button:hover {
   background-color: #0056b3;
 }
-
 </style>
