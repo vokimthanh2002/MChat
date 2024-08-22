@@ -5,6 +5,22 @@
       <button class="logout" @click="logout">Logout</button>
     </div>
     <div class="chat-container">
+      <div class="sidebar">
+        <div
+            class="user"
+            v-for="user in users"
+            :key="user.username"
+        >
+          <img
+              v-if="user.username !== username"
+              :src="user.avatar"
+              alt="avatar"
+              class="user-avatar"
+          />
+          <span
+              v-if="user.username !== username" class="user-name">{{ user.username }}</span>
+        </div>
+      </div>
       <div class="chat-box">
         <div class="messages" ref="messagesContainer">
           <div
@@ -57,6 +73,7 @@ export default {
       socketUrl: `http://localhost:8080/chat?token=${localStorage.getItem('token')}`,
       message: '',
       messages: [],
+      users: [], // Danh sách người dùng
       username: localStorage.getItem('username'),
     };
   },
@@ -72,6 +89,18 @@ export default {
       }, error => {
         console.log('STOMP error: ' + error);
       });
+    },
+    async fetchUsers() {
+      try {
+        const response = await axios.get('http://localhost:8080/user/get-users', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.users = response.data;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
     },
     async fetchMessages() {
       try {
@@ -99,7 +128,6 @@ export default {
           timestamp: new Date().toISOString(),
           sender: this.username,
           content: this.message,
-          avatar: 'https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/455260886_1943578062751604_7333532100857127975_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeFu6jAodcMmaNzFDFzbI6V0qCDvpiMJvj6oIO-mIwm-Psi-3VMvi32BKwIb85ieGtrg3qSjSn1l-ui7DSk6amCj&_nc_ohc=E4Rfx1p_qToQ7kNvgGFITy0&_nc_ht=scontent.fdad1-4.fna&oh=00_AYDi9H4nfGJ-SAaLF244nT7C-FhoZgjrcI5sqmhSSxy9Bg&oe=66C25B9A',
           type: 'CHAT'
         }));
         this.message = ''; // Clear the input field after sending
@@ -119,6 +147,7 @@ export default {
   },
   mounted() {
     this.fetchMessages();
+    this.fetchUsers(); // Fetch danh sách người dùng khi tải trang
     this.connect();
     this.$nextTick(() => {
       const messagesContainer = this.$refs.messagesContainer;
@@ -168,15 +197,44 @@ export default {
 
 .chat-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px; /* Điều chỉnh kích thước tổng thể để thêm sidebar */
   display: flex;
-  justify-content: center;
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.user {
+  display: flex;
   align-items: center;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.user:hover{
+  background: #007bff;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-name {
+  font-size: 1rem;
+  color: #333;
 }
 
 .chat-box {
-  width: 100%;
-  height: 70vh;
+  flex: 1;
+  height: 90vh;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);

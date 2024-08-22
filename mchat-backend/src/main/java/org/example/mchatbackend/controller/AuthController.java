@@ -1,10 +1,13 @@
 package org.example.mchatbackend.controller;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.example.mchatbackend.dto.AuthReposeDTO;
 import org.example.mchatbackend.dto.LoginRequest;
 import org.example.mchatbackend.dto.RegisterRequest;
+import org.example.mchatbackend.entity.LoginLog;
 import org.example.mchatbackend.entity.Role;
 import org.example.mchatbackend.entity.UserEntity;
+import org.example.mchatbackend.repository.LoginLogRepository;
 import org.example.mchatbackend.repository.RoleRepository;
 import org.example.mchatbackend.repository.UserRepository;
 import org.example.mchatbackend.security.JwtGenerator;
@@ -17,11 +20,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -34,6 +35,8 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     private JwtGenerator jwtGenerator;
     @Autowired
+    private LoginLogRepository loginLogRepository;
+    @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtGenerator generator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
@@ -43,7 +46,10 @@ public class AuthController {
     }
 
 
-
+    @GetMapping(value = "/hello")
+    public String hello() {
+        return "Hello World";
+    }
     @PostMapping(value = "/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
@@ -61,11 +67,26 @@ public class AuthController {
         return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
     @PostMapping(value = "/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+        // Kiểm tra số lượng tài khoản đã đăng nhập từ IP này
+        int distinctUsersCount = loginLogRepository.countDistinctUsernamesByIpAddress(httpServletRequest.getRemoteAddr());
+
+        if (distinctUsersCount >= 3) {
+            return new ResponseEntity<>("IP này đã đăng nhập quá 3 tài khoản khác nhau!", HttpStatus.FORBIDDEN);
+        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
+        // Lấy địa chỉ IP từ request
+        String ipAddress = httpServletRequest.getRemoteAddr();
+        // Lưu vết đăng nhập
+        LoginLog loginLog = new LoginLog();
+        loginLog.setUsername(loginRequest.getUsername());
+        loginLog.setLoginTime(LocalDateTime.now());
+        loginLog.setIpAddress(ipAddress);
+        loginLogRepository.save(loginLog);
+
         return new ResponseEntity<>(new AuthReposeDTO(token, loginRequest.getUsername()), HttpStatus.OK);
     }
 }

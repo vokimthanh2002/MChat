@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,5 +41,8 @@ public class UserService {
     }
     public UserEntity findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+    public List<UserEntity> findAllUsers() {
+       return userRepository.findAll();
     }
 }
