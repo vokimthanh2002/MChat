@@ -71,8 +71,8 @@ public class AuthController {
         // Kiểm tra số lượng tài khoản đã đăng nhập từ IP này
         int distinctUsersCount = loginLogRepository.countDistinctUsernamesByIpAddress(httpServletRequest.getRemoteAddr());
 
-        if (distinctUsersCount >= 3) {
-            return new ResponseEntity<>("IP này đã đăng nhập quá 3 tài khoản khác nhau!", HttpStatus.FORBIDDEN);
+        if (distinctUsersCount >= 10) {
+            return new ResponseEntity<>("IP này đã đăng nhập quá 10 tài khoản khác nhau!", HttpStatus.FORBIDDEN);
         }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

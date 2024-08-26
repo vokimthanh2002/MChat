@@ -134,7 +134,14 @@ export default {
       }
     },
     onMessageReceived(message) {
+      debugger
       this.messages.push(message);
+      // Phát âm thanh thông báo nếu tin nhắn đến từ người khác
+      if (message.sender !== this.username) {
+        const audio = new Audio('/notification.mp3');
+        audio.play();
+      }
+
       this.$nextTick(() => {
         const messagesContainer = this.$refs.messagesContainer;
         messagesContainer.scrollTop = messagesContainer.scrollHeight; // Cuộn thanh cuộn đến tin nhắn mới nhất
