@@ -10,6 +10,7 @@
             class="user"
             v-for="user in users"
             :key="user.username"
+            @click="openChatRoom(user.username)"
         >
           <img
               v-if="user.username !== username"
@@ -75,6 +76,9 @@ export default {
       messages: [],
       users: [], // Danh sách người dùng
       username: localStorage.getItem('username'),
+      currentChatRoom: null,
+      chatRoom:null,
+
     };
   },
   methods: {
@@ -90,6 +94,22 @@ export default {
         console.log('STOMP error: ' + error);
       });
     },
+    async openChatRoom(userName) {
+      const response = await axios.get('http://localhost:8080/room', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        params: {
+          user1Username: this.username,
+          user2Username: userName
+        }
+      });
+      this.currentChatRoom = response.data.chatRoomId;
+      console.log(this.currentChatRoom);
+      console.log(response.data);
+      this.getChatroomById();
+      this.messages = response.data.messages;
+    },
     async fetchUsers() {
       try {
         const response = await axios.get('http://localhost:8080/user/get-users', {
@@ -100,6 +120,21 @@ export default {
         this.users = response.data;
       } catch (error) {
         console.error('Error fetching users:', error);
+      }
+    },
+    async getChatroomById() {
+      try {
+        const response = await axios.get('http://localhost:8080/get-chatroom', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          params: {
+            idRoom: this.currentChatRoom,
+          }
+        });
+        this.chatRoom = response.data;
+      } catch (error) {
+        console.error('Error chatroom:', error);
       }
     },
     async fetchMessages() {
@@ -121,6 +156,7 @@ export default {
     logout() {
       this.$router.push('/');
       localStorage.removeItem('token');
+      localStorage.removeItem('username');
     },
     sendMessage() {
       if (this.message.trim() !== '') {
@@ -128,7 +164,8 @@ export default {
           timestamp: new Date().toISOString(),
           sender: this.username,
           content: this.message,
-          type: 'CHAT'
+          type: 'CHAT',
+          chatRoom: this.chatRoom,
         }));
         this.message = ''; // Clear the input field after sending
       }
@@ -153,7 +190,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchMessages();
+    // this.fetchMessages();
     this.fetchUsers(); // Fetch danh sách người dùng khi tải trang
     this.connect();
     this.$nextTick(() => {

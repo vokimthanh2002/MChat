@@ -15,6 +15,18 @@ public class Message {
     private String content;
     private LocalDateTime timestamp;
 
+    @ManyToOne
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
     // Getters and setters
 
     public Long getId() {
