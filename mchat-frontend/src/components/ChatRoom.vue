@@ -99,6 +99,8 @@ export default {
       console.log(response.data);
       this.getChatroomById();
       this.getUserByUsername(userName);
+      // Lấy tin nhắn liên quan đến phòng chat hiện tại
+      // this.messages = response.data.messages.filter(msg => msg.chatRoom.id === this.currentChatRoom);
       this.messages = response.data.messages;
       this.$nextTick(() => {
         const messagesContainer = this.$refs.messagesContainer;
@@ -192,15 +194,19 @@ export default {
       }
     },
     onMessageReceived(message) {
-      this.messages.push(message);
-      if (message.sender !== this.username) {
-        const audio = new Audio('/notification.mp3');
-        audio.play();
+      if (message.chatRoom.id === this.currentChatRoom) {
+        this.messages.push(message);
+
+        if (message.sender !== this.username) {
+          const audio = new Audio('/notification.mp3');
+          audio.play();
+        }
+
+        this.$nextTick(() => {
+          const messagesContainer = this.$refs.messagesContainer;
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
       }
-      this.$nextTick(() => {
-        const messagesContainer = this.$refs.messagesContainer;
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      });
     },
     formatTimestamp(timestamp) {
       const date = new Date(timestamp);

@@ -34,7 +34,6 @@ public class ChatController {
         message.setTimestamp(LocalDateTime.now());
         return messageService.save(message);
     }
-
     @GetMapping("/room")
     public ResponseEntity<ChatRoomResponse> getChatRoom(
             @RequestParam String user1Username,
