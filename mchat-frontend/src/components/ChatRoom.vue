@@ -24,13 +24,10 @@
           <h3 class="receiver-name">{{ userReceiver.name }}</h3>
         </div>
         <div class="messages-container" ref="messagesContainer">
-          <div
-              v-for="msg in messages"
-              :key="msg.timestamp"
-              :class="['message', { 'sent': msg.sender === username, 'received': msg.sender !== username }]"
-          >
+          <div v-for="msg in messages" :key="msg.timestamp" :class="['message', { 'sent': msg.sender === username, 'received': msg.sender !== username }]">
             <div class="message-content">
-              <p class="message-text">{{ msg.content }}</p>
+              <p class="message-text" v-if="msg.content">{{ msg.content }}</p>
+              <img v-if="msg.imageUrl" :src="'http://localhost:8080'+msg.imageUrl" class="message-image" />
               <span class="message-timestamp">{{ formatTimestamp(msg.timestamp) }}</span>
             </div>
           </div>
@@ -41,6 +38,19 @@
               @keyup.enter="sendMessage"
               placeholder="Type a message..."
               class="message-input"
+          />
+          <!-- Icon hình ảnh để mở file input -->
+          <label for="file-upload" class="file-upload-label">
+            <img src="https://png.pngtree.com/png-vector/20190214/ourmid/pngtree-vector-gallery-icon-png-image_515223.jpg" alt="Upload" class="image-upload-icon" />
+          </label>
+
+          <!-- Input file ẩn -->
+          <input
+              type="file"
+              id="file-upload"
+              @change="onFileChange"
+              class="file-input"
+              accept="image/*"
           />
           <button @click="sendMessage" class="send-button">Send</button>
         </div>
@@ -69,6 +79,8 @@ export default {
       userReceiver: null,
       currentChatRoom: null,
       chatRoom: null,
+      selectedFile: null,
+      imageUrl: null,
     };
   },
   methods: {
@@ -83,6 +95,27 @@ export default {
       }, error => {
         console.log('STOMP error: ' + error);
       });
+    },
+    onFileChange(event) {
+      this.selectedFile = event.target.files[0];
+    },
+    async uploadImage() {
+      const formData = new FormData();
+      formData.append("file", this.selectedFile);
+
+      try {
+        const response = await axios.post('http://localhost:8080/api/images/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        // this.selectedFile = null; // Clear selected file after upload
+        return response.data; // Trả về URL của ảnh
+      } catch (error) {
+        console.error("Failed to upload image:", error);
+        return null;
+      }
     },
     async openChatRoom(userName) {
       const response = await axios.get('http://localhost:8080/room', {
@@ -181,16 +214,23 @@ export default {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
     },
-    sendMessage() {
-      if (this.message.trim() !== '') {
+    async sendMessage() {
+      debugger
+      if (this.selectedFile) {
+        this.imageUrl = await this.uploadImage();
+      }
+      console.log(this.imageUrl)
+      if (this.message.trim() !== ''|| this.imageUrl !== null) {
         this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify({
           timestamp: new Date().toISOString(),
           sender: this.username,
           content: this.message,
+          imageUrl: this.imageUrl, // URL của ảnh nếu có
           type: 'CHAT',
           chatRoom: this.chatRoom,
         }));
         this.message = '';
+        this.imageUrl = null;
       }
     },
     onMessageReceived(message) {
@@ -221,6 +261,20 @@ export default {
 </script>
 
 <style scoped>
+.file-input {
+  display: none; /* Ẩn input file */
+}
+
+.file-upload-label {
+  cursor: pointer; /* Con trỏ thành dạng pointer khi hover */
+  margin-right: 10px;
+}
+
+.image-upload-icon {
+  width: 24px; /* Kích thước icon */
+  height: 24px;
+}
+
 .chat-app {
   display: flex;
   flex-direction: column;
@@ -236,6 +290,11 @@ export default {
   background-color: #95aabd;
   color: white;
   padding: 10px 20px;
+}
+.message-image {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 .chat-header-mes {
   display: flex;
@@ -355,7 +414,7 @@ export default {
 }
 
 .message-content {
-  max-width: 70%;
+  max-width: 50%;
   padding: 10px;
   border-radius: 10px;
   background-color: #5ca853;

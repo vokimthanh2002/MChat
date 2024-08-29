@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/chat/**").permitAll()
-                .requestMatchers("/room").permitAll()
+                .requestMatchers("/api/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

@@ -13,6 +13,7 @@ public class Message {
     private String sender;
     @Column(columnDefinition = "text")
     private String content;
+    private String imageUrl;
     private LocalDateTime timestamp;
 
     @ManyToOne
@@ -28,6 +29,14 @@ public class Message {
     }
 
     // Getters and setters
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public Long getId() {
         return id;
