@@ -1,0 +1,30 @@
+
+--> 1. Chức năng Đăng nhập
+-Mô tả tổng quan:
+Người dùng có thể đăng nhập vào hệ thống bằng email hoặc thông qua các tài khoản mạng xã hội như Google/Facebook.
+-Yêu cầu chi tiết:
+- Đăng nhập bằng Email:
+     *Người dùng nhập email và mật khẩu.
+     *Hệ thống xác thực thông tin đăng nhập với cơ sở dữ liệu.
+     *Nếu thông tin đúng, hệ thống cho phép truy cập và chuyển hướng đến trang chat.
+     *Nếu thông tin sai, hiển thị thông báo lỗi và yêu cầu người dùng thử lại.
+     *Hỗ trợ chức năng "Quên mật khẩu" để người dùng đặt lại mật khẩu.
+- Đăng nhập bằng Facebook/GitHub:
+     *Người dùng chọn phương thức đăng nhập qua Google/Facebook.
+     *Hệ thống chuyển hướng tới trang xác thực của Google/Facebook.
+     *Sau khi xác thực thành công, hệ thống lấy thông tin cơ bản của người dùng và đăng nhập vào hệ thống.
+     *Nếu tài khoản mạng xã hội chưa được liên kết với tài khoản hệ thống, yêu cầu người dùng cung cấp thêm thông tin cần thiết để hoàn tất đăng ký.
+--> 2. Chức năng Lưu vết tài khoản
+- Mô tả tổng quan:
+     *Hệ thống cần lưu lại các hành động đăng nhập của người dùng để phục vụ cho mục đích bảo mật và quản lý.
+- Yêu cầu chi tiết:
+   --Lưu vết đăng nhập:
+     *Ghi lại thời gian.
+     *Ghi lại thông tin về phương thức đăng nhập (email, Facebook, GitHub).
+     *Lưu trữ thông tin này trong cơ sở dữ liệu để quản lý và truy xuất sau này.
+  --Quản lý thông tin lưu vết:
+     *Cho phép quản trị viên truy cập và xem lịch sử đăng nhập của tất cả người dùng.
+     *Hỗ trợ chức năng tìm kiếm và lọc theo thời gian
+  --Bảo mật dữ liệu:
+     *Mã hóa mật khẩu trước khi lưu trữ.
+     *Chỉ cho phép những người có quyền hạn truy cập vào thông tin này.

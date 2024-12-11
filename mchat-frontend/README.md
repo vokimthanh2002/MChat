@@ -1,0 +1,40 @@
+# mchat-frontend
+
+This template should help get you started developing with Vue 3 in Vite.
+
+## Recommended IDE Setup
+
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+npm install vue-router vuex axios sockjs-client stompjs
+npm install vue-router
+npm update sockjs-client stompjs
+npm install global
+npm install socket.io-client
+npm install vuex
+npm install bootstrap@4
+
+
+
+
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
+```
